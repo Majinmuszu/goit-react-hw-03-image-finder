@@ -1,19 +1,16 @@
 import React from "react";
 import s from "./ImageGalleryItem.module.css";
 
-const ImageGalleryItem = ({ items }) => {
+const ImageGalleryItem = ({ id, src, bigImg }) => {
   return (
-    <>
-      {items.map(({ id, webformatURL, largeImageURL }) => (
-        <li className={s.ImageGalleryItem} key={id}>
-          <img
-            className={s.ImageGalleryItemImage}
-            src={webformatURL}
-            alt="something goes here"
-          />
-        </li>
-      ))}
-    </>
+      <li className={s.ImageGalleryItem} key={id} id={id}>
+        <img
+          className={s.ImageGalleryItemImage}
+          src={src}
+          alt="something goes here"
+          data-img={bigImg}
+        />
+      </li>
   );
 };
 

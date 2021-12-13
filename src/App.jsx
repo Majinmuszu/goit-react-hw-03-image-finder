@@ -5,6 +5,7 @@ import Loader from "react-loader-spinner";
 import SearchBar from "./components/SearchBar/SearchBar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import Button from "./components/Button/Button";
+import Modal from "./components/Modal/Modal";
 // import { fetchImages } from "./utils/fetch";
 
 export default class App extends Component {
@@ -14,6 +15,8 @@ export default class App extends Component {
     images: [],
     page: 1,
     hitsFetched: "",
+    isModalOpen: false,
+    modalPicture: "",
   };
 
   fetchImages(keyword, page) {
@@ -38,7 +41,7 @@ export default class App extends Component {
               });
           console.log(data.hits);
         })
-        .finally(() => this.setState({isLoading: false}))
+        .finally(() => this.setState({ isLoading: false }));
     } catch (error) {
       console.error(error);
     }
@@ -54,23 +57,52 @@ export default class App extends Component {
   };
 
   onSetKeyword = (e) => {
-    this.setState({images: []})
+    this.setState({ images: [] });
     this.setState({ page: 1 });
     this.setState({ keyword: e.target.value });
-    this.setState({isLoading: true})
+    this.setState({ isLoading: true });
   };
 
   loadMore = (e) => {
-    const { keyword, page } = this.state;
+    const { keyword, page, hitsFetched } = this.state;
     e.preventDefault();
     this.fetchImages(keyword, page);
+    setTimeout(() => {
+      window.scrollBy({
+        top: 400,
+        behavior: "smooth",
+      });
+    }, 200);
   };
 
+  openModal = (e) => {
+    if (e.target.nodeName !== "IMG") {
+      return;
+    }
+    this.setState({
+      modalPicture: e.target.dataset.img,
+      isModalOpen: true,
+    });
+  };
+
+  closeModalWithEsc = (e) => {
+    if (e.code === "Escape") {
+      this.setState({ isModalOpen: false });
+    }
+  };
+
+  closeModal = (e) => {
+    if (e.target.nodeName === "IMG") {
+      return;
+    }
+    this.setState({ isModalOpen: false });
+  };
   render() {
+    window.addEventListener("keydown", this.closeModalWithEsc);
     return (
       <div className="App">
         <SearchBar onSubmit={this.onSubmit} onSetKeyword={this.onSetKeyword} />
-        <ImageGallery items={this.state.images} />
+        <ImageGallery items={this.state.images} openModal={this.openModal} />
         {this.state.isLoading === true ? (
           <Loader
             className="loader"
@@ -88,6 +120,13 @@ export default class App extends Component {
           <>No more results</>
         ) : (
           <Button loadMore={this.loadMore} />
+        )}
+        {this.state.isModalOpen === true ? (
+          <Modal closeModal={this.closeModal}>
+            <img src={this.state.modalPicture} alt={"something"} />
+          </Modal>
+        ) : (
+          <></>
         )}
       </div>
     );
