@@ -39,7 +39,6 @@ export default class App extends Component {
                 isLoading: false,
                 hitsFetched: data.hits.length,
               });
-          console.log(data.hits);
         })
         .finally(() => this.setState({ isLoading: false }));
     } catch (error) {
@@ -64,7 +63,7 @@ export default class App extends Component {
   };
 
   loadMore = (e) => {
-    const { keyword, page, hitsFetched } = this.state;
+    const { keyword, page } = this.state;
     e.preventDefault();
     this.fetchImages(keyword, page);
     setTimeout(() => {
