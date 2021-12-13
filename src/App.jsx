@@ -71,7 +71,7 @@ export default class App extends Component {
         top: 400,
         behavior: "smooth",
       });
-    }, 200);
+    }, 500);
   };
 
   openModal = (e) => {
