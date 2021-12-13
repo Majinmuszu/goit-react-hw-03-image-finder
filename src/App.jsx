@@ -52,7 +52,6 @@ export default class App extends Component {
     const form = e.target;
     this.fetchImages(keyword, page);
     form.reset();
-    console.log(this.state.images);
   };
 
   onSetKeyword = (e) => {
